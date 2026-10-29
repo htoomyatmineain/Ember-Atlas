@@ -76,3 +76,10 @@ h1,h2,h3{color:var(--text);font-weight:650;line-height:1.3;letter-spacing:-.025e
 /* Let the hotspot inspector use the available right-side height. */
 .map-workspace .spot-details,.map-workspace:has(.contribution-calendar) .spot-details{top:128px;bottom:auto;max-height:calc(100dvh - 150px);height:auto;overflow:auto;scrollbar-width:thin}.spot-heading{padding:13px 16px 11px}.spot-details .spot-heading h3{font-size:16px}.spot-location{padding:11px 16px 0}.spot-period{margin:10px 16px}.spot-activity{margin:0 16px;padding:10px 0}.spot-activity dd{font-size:25px;margin-top:5px}.spot-source-line{margin:10px 16px 0}.spot-details .spot-caveat{margin:9px 16px 10px}.spot-details .spot-technical{padding:9px 16px 11px}
 @media(max-width:760px){.map-workspace .map-zoom{left:12px;right:auto;top:310px;bottom:auto}.map-workspace .map-zoom button{width:28px;height:28px;min-height:28px}.map-workspace .spot-details,.map-workspace:has(.contribution-calendar) .spot-details{top:116px;bottom:auto;max-height:calc(100dvh - 138px);z-index:770}.spot-details .spot-heading h3{font-size:15px}}
+/* Subtle rounding for workspace surfaces and controls. */
+.map-workspace :is(.floating-header,.tool-rail,.metrics,.calendar-section,.panel,.detail-drawer,.filter-popover,.map-zoom,.notice,.setup-banner){border-radius:6px!important}
+.map-workspace :is(button,.button,select,input,.brand-mark,.calendar-view-switch,.source-option,.map-label,.map-status,.map-legend,.leaflet-tooltip){border-radius:4px!important}
+.map-workspace :is(.contribution-day,.calendar-legend i){border-radius:2px!important}
+.map-workspace .floating-header{border-radius:0!important}
+.map-workspace .spot-heading{border-radius:6px 6px 0 0!important}
+.map-workspace .map-zoom{overflow:hidden}.map-workspace .map-zoom button{border-radius:0!important}
