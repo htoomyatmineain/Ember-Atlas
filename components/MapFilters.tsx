@@ -1,0 +1,18 @@
+'use client';
+import {useEffect,useRef,useState} from 'react';
+import {type Filters} from '@/lib/model';
+import Icon from './Icon';
+const monthNames=Array.from({length:12},(_,i)=>new Date(Date.UTC(2025,i,1)).toLocaleString('en',{month:'long',timeZone:'UTC'}));
+export default function MapFilters({filters:f,onChange}:{filters:Filters;onChange:(patch:Partial<Filters>)=>void}){
+ const [open,setOpen]=useState<'area'|'date'|'sensor'|null>(null),root=useRef<HTMLDivElement>(null);
+ useEffect(()=>{const outside=(e:PointerEvent)=>{if(!root.current?.contains(e.target as Node))setOpen(null)};const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){if(open)root.current?.querySelector<HTMLButtonElement>(`[data-filter="${open}"]`)?.focus();setOpen(null)}};document.addEventListener('pointerdown',outside);document.addEventListener('keydown',escape);return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',escape)}},[open]);
+ const entries=[{key:'area',label:'Area',value:'Myanmar'},{key:'date',label:'Date',value:`${f.day?f.day+' ':''}${f.month?monthNames[f.month-1].slice(0,3)+' ':''}${f.year}`},{key:'sensor',label:'Sensor',value:f.mode==='harmonized'?'Common grid':f.mode==='modis'?'MODIS':'VIIRS'}] as const;
+ return <div className="map-filter-group" ref={root} aria-label="Map filters">{entries.map(({key,label,value})=><div className="map-filter" key={key}>
+  <button data-filter={key} className={'filter-trigger '+(open===key?'is-open':'')} aria-expanded={open===key} aria-controls={'filter-'+key} onClick={()=>setOpen(open===key?null:key)}><span className="filter-name">{label}</span><span className="filter-value">{value}</span><Icon name="chevron" size={14}/></button>
+  {open===key&&<section className="filter-popover" id={'filter-'+key} aria-label={label+' filter'}><div className="filter-popover-heading"><h2>{key==='area'?'Study area':key==='date'?'Observation period':'Activity layer'}</h2><button onClick={()=>setOpen(null)} aria-label={'Close '+label.toLowerCase()+' filter'}><Icon name="close" size={16}/></button></div>
+   {key==='area'&&<><label>Country<select value={f.area} onChange={e=>onChange({area:e.target.value})}><option value="MMR">Myanmar</option></select></label><p>Statistics cover the selected country, regardless of map position.</p></>}
+   {key==='date'&&<><div className="date-filter-fields"><label>Year<select value={f.year} onChange={e=>onChange({year:Number(e.target.value),day:undefined})}>{Array.from({length:11},(_,i)=>2025-i).map(y=><option key={y}>{y}</option>)}</select></label><label>Month<select value={f.month??0} onChange={e=>onChange({month:Number(e.target.value)||undefined,day:undefined})}><option value="0">Whole year</option>{monthNames.map((name,i)=><option key={name} value={i+1}>{name}</option>)}</select></label></div>{f.day&&<p>Selected day: {f.day} {monthNames[(f.month??1)-1]}. <button className="filter-reset" onClick={()=>onChange({day:undefined})}>Clear day</button></p>}<p>Use the activity calendar to select an individual UTC day.</p><button className="filter-reset" onClick={()=>onChange({month:undefined,day:undefined})}>Reset to whole year</button></>}
+   {key==='sensor'&&<div className="filter-source-options">{[{mode:'harmonized',label:'Common-grid activity',detail:'Experimental · 1 km equal-area grid'},{mode:'modis',label:'MODIS',detail:'Terra + Aqua · Collection 6.1'},{mode:'viirs',label:'VIIRS',detail:'Suomi NPP · 375 m'}].map(option=><label key={option.mode}><input type="radio" name="map-sensor" value={option.mode} checked={f.mode===option.mode} onChange={()=>onChange({mode:option.mode as Filters['mode']})}/><span>{option.label}<small>{option.detail}</small></span></label>)}</div>}
+  </section>}
+ </div>)}</div>
+}
