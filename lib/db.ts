@@ -1,0 +1,5 @@
+import 'server-only';
+import {createClient} from '@supabase/supabase-js';
+export function db(){const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.SUPABASE_SERVICE_ROLE_KEY;if(!url||!key)return null;return createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false},global:{fetch:(input,init)=>fetch(input,{...init,signal:AbortSignal.timeout(20000)})}});}
+export async function catalog(){const client=db();if(!client)return null;const {data,error}=await client.from('datasets').select('*').eq('status','published').order('published_at',{ascending:false}).limit(1);if(error)throw Error('Backend unavailable');return data?.[0]??null;}
+export async function rows(dataset:string,area:string,start:string,end:string){const client=db()!;const result:any[]=[];for(let offset=0;offset<5000;offset+=500){const {data,error}=await client.from('area_days').select('*').eq('dataset',dataset).eq('area',area).gte('date',start).lte('date',end).order('date').range(offset,offset+499);if(error)throw Error('Backend unavailable');result.push(...data??[]);if(!data||data.length<500)return result;}throw Error('Analytical range exceeded');}

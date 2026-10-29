@@ -1,0 +1,20 @@
+{
+  "_note": "Schema example only. This is not an imported observation or completed source request.",
+  "source": "modis",
+  "product": "MODIS Collection 6.1",
+  "platforms": ["Terra", "Aqua"],
+  "source_url": null,
+  "from": null,
+  "to": null,
+  "actual_first": null,
+  "actual_last": null,
+  "fetched_at": null,
+  "checksum": null,
+  "parsed_rows": null,
+  "valid_rows": null,
+  "rejected_rows": null,
+  "included_rows": null,
+  "state": "not-requested",
+  "method_version": "grid-v1",
+  "boundary": {"source_url": "https://github.com/nvkelso/natural-earth-vector", "license": "Public domain", "version": "v5.1.2-10m-admin0"}
+}

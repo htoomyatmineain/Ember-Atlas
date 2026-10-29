@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,writeFile,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join,resolve} from 'node:path';
+import {spawnSync} from 'node:child_process';
+const headers='latitude,longitude,acq_date,acq_time,satellite,confidence,version,frp\n';
+test('import CLI dry-run validates genuine schema, reports duplicate rows and rejects invalid bodies',async()=>{const tmp=await mkdtemp(join(tmpdir(),'ember-tests-'));try{const file=join(tmp,'fixture.csv');const run=()=>spawnSync(process.execPath,['--import','tsx','scripts/import.ts','--from','2025-01-01','--to','2025-01-01','--source','modis','--file',file,'--boundary','public/boundaries/MMR.geojson','--boundary-manifest','public/boundaries/manifest.json','--dry-run'],{cwd:resolve('.'),encoding:'utf8'});
+ await writeFile(file,headers+'20,96,2025-01-01,5,Terra,40,6.1,\n20,96,2025-01-01,5,Terra,40,6.1,\n');let r=run();assert.equal(r.status,0,r.stderr);const manifest=JSON.parse(r.stdout.trim());assert.equal(manifest.duplicate_rows,1);assert.equal(manifest.included_rows,1);
+ await writeFile(file,'');r=run();assert.notEqual(r.status,0);assert(r.stderr.includes('Missing CSV headers'));
+ await writeFile(file,'wrong,headers\n1,2');r=run();assert.notEqual(r.status,0);assert(r.stderr.includes('missing required headers'));
+ await writeFile(file,headers);r=run();assert.equal(r.status,0,r.stderr);assert.equal(JSON.parse(r.stdout.trim()).included_rows,0);
+ await writeFile(file,headers+'91,96,2025-01-01,0005,Terra,40,6.1,\n');r=run();assert.notEqual(r.status,0);assert.equal(JSON.parse(r.stdout.trim()).state,'review-required');
+ }finally{await rm(tmp,{recursive:true,force:true});}});

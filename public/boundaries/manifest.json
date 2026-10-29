@@ -1,0 +1,10 @@
+{
+  "source_url": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_10m_admin_0_countries.geojson",
+  "license": "Public domain",
+  "license_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+  "version": "v5.1.2-10m-admin0",
+  "sha256": "d87d7ac177ff65134812f8ba37cfe6dd709c6e3a57f94c6cc25cfc149d6000b3",
+  "fetched_at": "2026-10-28T14:55:42.385Z",
+  "attribution": "Made with Natural Earth",
+  "caveat": "Generalized cartographic boundary; coastal and border detail is limited; de facto boundaries."
+}

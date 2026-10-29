@@ -1,0 +1,3 @@
+import {createClient} from '@supabase/supabase-js';
+const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;if(!url||!key)throw Error('Supabase URL and anon key required');const db=createClient(url,key,{auth:{persistSession:false}});
+for(const table of ['areas','datasets','ingestion_chunks','daily_source_status','cell_days','area_days']){const {error}=await db.from(table).insert({});if(!error||!['42501','PGRST301'].includes(error.code))throw Error(`Anonymous write denial not verified for ${table}: ${error?.code}`);console.log(table+': anonymous write denied');}

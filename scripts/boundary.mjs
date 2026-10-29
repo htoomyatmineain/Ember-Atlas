@@ -1,0 +1,5 @@
+import {writeFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+const ref='v5.1.2';
+const url=`https://raw.githubusercontent.com/nvkelso/natural-earth-vector/${ref}/geojson/ne_10m_admin_0_countries.geojson`;
+const r=await fetch(url);if(!r.ok)throw Error('Boundary download failed');const collection=await r.json();const mmr=collection.features.find((f)=>f.properties.ADM0_A3==='MMR');if(!mmr)throw Error('Myanmar polygon not found');const text=JSON.stringify(mmr);await writeFile('public/boundaries/MMR.geojson',text);await writeFile('public/boundaries/manifest.json',JSON.stringify({source_url:url,license:'Public domain',license_url:'https://www.naturalearthdata.com/about/terms-of-use/',version:ref+'-10m-admin0',sha256:createHash('sha256').update(text).digest('hex'),fetched_at:new Date().toISOString(),attribution:'Made with Natural Earth',caveat:'Generalized cartographic boundary; coastal and border detail is limited; de facto boundaries.'},null,2));console.log('Myanmar licensed boundary acquired; '+text.length+' bytes');
