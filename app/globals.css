@@ -83,3 +83,15 @@ h1,h2,h3{color:var(--text);font-weight:650;line-height:1.3;letter-spacing:-.025e
 .map-workspace .floating-header{border-radius:0!important}
 .map-workspace .spot-heading{border-radius:6px 6px 0 0!important}
 .map-workspace .map-zoom{overflow:hidden}.map-workspace .map-zoom button{border-radius:0!important}
+/* A softer radius while retaining the compact monitoring layout. */
+.map-workspace :is(.floating-header,.tool-rail,.metrics,.calendar-section,.panel,.detail-drawer,.filter-popover,.map-zoom,.notice,.setup-banner){border-radius:10px!important}
+.map-workspace :is(button,.button,select,input,.brand-mark,.calendar-view-switch,.source-option,.map-label,.map-status,.map-legend,.leaflet-tooltip){border-radius:7px!important}
+.map-workspace :is(.contribution-day,.calendar-legend i){border-radius:3px!important}
+.map-workspace .floating-header{border-radius:0!important}
+.map-workspace .spot-heading{border-radius:10px 10px 0 0!important}
+.map-workspace .map-zoom button{border-radius:0!important}
+/* Consistent soft corners across all cards and floating surfaces. */
+.map-workspace :is(.metrics,.calendar-section,.analysis-panel,.detail-drawer,.filter-popover,.notice,.setup-banner,.map-label,.map-status,.map-legend,.tool-rail,.map-zoom,.month,.research-note,.source-option.selected){border-radius:10px!important}
+.map-workspace .spot-heading{border-radius:10px 10px 0 0!important}
+.map-workspace .spot-details{overflow:hidden}
+.map-workspace .spot-details:has(.spot-technical[open]){overflow:auto}
